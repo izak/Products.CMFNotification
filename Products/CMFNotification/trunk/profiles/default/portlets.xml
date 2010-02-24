@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<portlets>
+  <portlet addview="portlets.Subscription"
+           title="Subscription portlet"
+           description="A portlet that lets user subscribe to content."
+	   />
+</portlets>

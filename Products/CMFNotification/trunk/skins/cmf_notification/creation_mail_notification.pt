@@ -1,0 +1,23 @@
+<metal:define use-macro="here/global_defines/macros/defines">
+</metal:define><metal:define 
+    i18n:domain="plone"
+    tal:define="charset site_properties/default_charset | string:utf-8;
+                lt string:&lt;;gt string:&gt;;
+                dummy python:request.RESPONSE.setHeader('Content-Type','text/html;; charset=%s' % charset);
+">From: <span tal:replace="portal/email_from_name"/> <span tal:replace="structure lt"/><span tal:replace="portal/email_from_address"/><span tal:replace="structure gt"/>
+Subject: [Notification from <span tal:replace="portal/title"/>] New item: "<span tal:replace="here/Title"/>"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+
+    Hello,
+
+  Item "<span tal:replace="here/Title"/>" has been created.
+
+  <span tal:replace="string:${here/absolute_url}/view"/>
+
+    Regards,
+
+-- 
+<span tal:replace="portal/title"/>
+</metal:define>
