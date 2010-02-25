@@ -102,7 +102,7 @@ product:
 - Gaël Pasgrimaud: bug fixes, insightful comments and default mail
   templates in the early days.
 
-- JC Brand (brand AT syslab.com - Syslab): Created a Plone4 compatible 
+- JC Brand (brand AT syslab DOT com - Syslab): Created a Plone4 compatible 
   eggified version of CMFNotifіcation.
 
 Translations:
