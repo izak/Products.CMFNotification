@@ -5,13 +5,10 @@ $Id$
 """
 
 from Products.CMFCore.utils import getToolByName
-
 from NotificationTool import ID, LOG
-
 
 ## FIXME: PAS does fire events, we should use them to replace these
 ## monkey-patches: see "PluggableAuthService/interfaces/events.py".
-
 
 ######### CMFCore.RegistrationTool patch ########################
 def afterAdd(self, member, id, password, properties):
