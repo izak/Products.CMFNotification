@@ -2,7 +2,7 @@ Changelog
 =========
 
 2.2dev1 (unreleased)
--------------------
+--------------------
 
 - The svn repository for the new eggified package has changed:
   http://svn.plone.org/svn/collective/Products.CMFNotification [jcbrand]
