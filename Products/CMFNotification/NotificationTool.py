@@ -27,7 +27,6 @@ import inspect
 import logging
 from types import StringType
 
-import transaction
 from Globals import InitializeClass
 from OFS.SimpleItem import SimpleItem
 from ZODB.POSException import ConflictError
