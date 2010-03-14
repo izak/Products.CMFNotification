@@ -6,7 +6,7 @@ $Id$
 import re
 from email.Header import Header
 
-from AccessControl import getSecurityManager, Unauthorized
+from AccessControl import Unauthorized
 from Products.PageTemplates.Expressions import getEngine
 from Products.PageTemplates.Expressions import SecureModuleImporter
 

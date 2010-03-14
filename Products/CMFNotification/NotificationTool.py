@@ -1,7 +1,7 @@
 # This file is part of CMFNotification
 #
 # Copyright (c) 2005-2008 by Pilot Systems (http://www.pilotsystems.net)
-# 
+#
 # CMFNotification is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
 # published by the Free Software Foundation; either version 2 of the
@@ -147,7 +147,7 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
                     'label': 'Rules on item creation (mail template)',
                     'mode': 'w',
                     'type': 'lines'},
- 
+
                    {'id': 'item_modification_notification_enabled',
                     'label': 'Enable item modification notification',
                     'mode': 'w',
@@ -255,7 +255,7 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
             return 0
         if self.ignoreNotification(obj):
             return 0
-        
+
         extra_bindings = getBasicBindings(obj)
         return self._handlerHelper(obj, 'item_creation',
                                    extra_bindings,
@@ -647,7 +647,7 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
                 if member is not None:
                     if member.has_permission('View', obj):
                         filtered_subscribers.append(subscriber)
-                
+
         return filtered_subscribers
 
 
@@ -756,7 +756,7 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
         """Return UID of the object."""
         if not IATContentType.providedBy(obj):
             return None
-        
+
         portal_uidhandler = getToolByName(self, 'portal_uidhandler')
         uid = portal_uidhandler.queryUid(obj, None)
         if uid is None: ## Not yet registered
@@ -800,7 +800,7 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
         uid = self._getUID(obj)
         if not uid:
             return
-        
+
         path = self._getPath(obj)
         known_path = self._uid_to_path.get(uid)
         if known_path != path:

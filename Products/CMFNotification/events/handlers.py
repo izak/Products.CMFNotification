@@ -46,7 +46,7 @@ def onObjectRemovedEvent(obj, event):
     """Subscriber for ``ObjectRemovedEvent``."""
     # we wait for transaction completion as removal can be aborted
     currentTransaction = transaction.get()
-    currentTransaction.addAfterCommitHook(onItemRemoval_hook, args=(obj,))
+    currentTransaction.addAfterCommitHook(onItemRemoval_hook, args=(obj, ))
 
 
 def onActionSucceededEvent(obj, event):
