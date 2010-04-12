@@ -4,6 +4,7 @@ $Id$
 """
 from Products.CMFCore import utils as CMFCoreUtils
 import Products.CMFNotification.patches
+import permissions
 
 def initialize(context):
     import NotificationTool
