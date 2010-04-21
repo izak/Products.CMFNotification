@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '2.2dev1'
+version = '2.2a1'
 
 setup(
     name='Products.CMFNotification',

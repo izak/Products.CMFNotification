@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.2a1 (2010-04-21)
+------------------
+
+- Registered the permission in zcml and call setDefaultRoles in __init__.py. [jcbrand] 
+
+
 2.2dev1 (2010-02-25)
 --------------------
 
