@@ -18,7 +18,7 @@ like::
     * :: string:workflow_mail_notification
 
 Save the configuration and add the following script somewhere (e.g. in
-``portal_skins/custom``) ``group_id`` parameter::
+``portal_skins/custom``)::
 
     from Products.CMFCore.utils import getToolByName
 
@@ -28,9 +28,10 @@ Save the configuration and add the following script somewhere (e.g. in
         return ()
     return group.getGroupMembers()
 
-Add a ``group_id`` paramater to the script, and a ``Manager`` proxy
-role. (Warning: it lets any user able to list users of a group on your
-portal. It is up to you to consider whether this is a security risk.)
+Add a ``group_id`` parameter to the script, and a ``Manager`` proxy
+role. (*Warning:* anyone will now be able to list users of any group
+of your portal. It is up to you to consider whether this is a security
+risk.)
 
 You might want to include this script in a product rather than putting
-it in ``portal_skins/custom``.
+it in ``portal_skins/custom``, probably as a browser view.

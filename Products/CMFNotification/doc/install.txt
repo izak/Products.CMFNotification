@@ -40,7 +40,7 @@ determined keyword, for example).
 To determine who, when and what, you have to define rules. There are
 two kinds of rules:
 
-- rules that define who we are sending e-mails to. There is one such
+- rules that define whom we are sending e-mails to. There is one such
   rule for each supported type of event (item creation, item
   modification, workflow transition, etc.) ;
 
@@ -120,9 +120,8 @@ Logging
 =======
 
 Every error or potential problem (if no user was found for a
-notification, if a problem occurs when trying to find or apply the
+notification, if a problem occured when trying to find or apply the
 mail template, etc.) is logged. If you do not receive any e-mail,
 check your Zope log file.
 
-For futher details, see ``how-to-troubleshoot.txt``.
-
+For further details, see ``how-to-troubleshoot.txt``.

@@ -18,7 +18,7 @@ The feature list is not closed. Future releases may include:
       * :: here/getReviewers :: python: True
 
   The third component of the rule would be labeled "trusted". If the
-  second component of the rule is trusted, then no security check is
+  third component of the rule is trusted, then no security check is
   done;
 
 - a nice configuration form: for now, the configuration is done
@@ -43,6 +43,6 @@ The feature list is not closed. Future releases may include:
 - anonymous subscription: this will allow anonymous users to subscribe
   their email address to an item.
 
-If you would like to participate to the development of this product,
-feel free to drop me an email so that I can coordinate everybody's
-efforts.
+If you would like to participate to the development of this product
+(by coding or sponsoring), feel free to drop me an email so that I can
+coordinate everybody's efforts.
