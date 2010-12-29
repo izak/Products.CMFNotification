@@ -36,11 +36,7 @@ of its items (including its subfolders, etc.).
 Dependencies
 ============
 
-This version of CMFNotification has the following dependencies:
-
-- Zope 2.10.x ;
-
-- Plone 3.x.
+This version of CMFNotification runs on Plone 4.
 
 Despite the name, this product may not work in a pure CMF
 portal. Minor changes may be needed. I thought about having an
@@ -88,11 +84,12 @@ This product has been partially sponsored by `Pilot Systems`_.
 The following people have developed, given help or tested this
 product:
 
-- Damien Baty (damien AT pilotsystems DOT net - Pilot Systems):
+- Damien Baty (damien DOT baty AT gmail DOT com):
   original author, tests, documentation, maintenance;
 
-- Alex Garel (alexandre AT pilotsystems DOT net - Pilot Systems):
-  "labels" feature;
+- Jan-Carel Brand: eggification;
+
+- Alex Garel: "labels" feature;
 
 - Gaël Le Mignot (gael AT pilotsystems DOT net - Pilot Systems): bug
   fixes;
