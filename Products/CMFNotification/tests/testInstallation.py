@@ -17,7 +17,6 @@ from Products.CMFNotification.config import PORTLET_NAME
 from Products.CMFNotification.NotificationTool import ID as TOOL_ID
 from Products.CMFNotification.permissions import SUBSCRIBE_PERMISSION
 
-from Products.CMFNotification.tests.plonetestbrowser import Browser
 from Products.CMFNotification.tests.base import CMFNotificationTestCase
 
 
@@ -29,7 +28,6 @@ class TestInstallation(CMFNotificationTestCase):
 
 
     def testToolIsThere(self):
-        portal = self.portal
         tool = getToolByName(self.portal, TOOL_ID)
         self.failUnless(tool is not None)
 
@@ -43,7 +41,6 @@ class TestInstallation(CMFNotificationTestCase):
 
 
     def testPortletCanBeAdded(self):
-        base_url = self.portal.absolute_url()
         for name in ('plone.leftcolumn', 'plone.rightcolumn'):
             manager = getUtility(IPortletManager,
                                  name=name,
@@ -97,7 +94,6 @@ class TestUnInstallation(CMFNotificationTestCase):
 
 
     def testPortletDoNoExist(self):
-        base_url = self.portal.absolute_url()
         for name in ('plone.leftcolumn', 'plone.rightcolumn'):
             manager = getUtility(IPortletManager,
                                  name=name,

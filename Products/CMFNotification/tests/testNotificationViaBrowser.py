@@ -3,14 +3,9 @@
 $Id$
 """
 
-from AccessControl import Unauthorized
-
 from Products.CMFCore.utils import getToolByName
 
-from Products.CMFNotification.utils import getPreviousVersion
-from Products.CMFNotification.exceptions import DisabledFeature
 from Products.CMFNotification.NotificationTool import ID as NTOOL_ID
-from Products.CMFNotification.permissions import SUBSCRIBE_PERMISSION
 
 from Products.CMFNotification.tests.base import FakeMailHost
 from Products.CMFNotification.tests.base import CMFNotificationBrowserTestCase
@@ -105,7 +100,6 @@ class TestNotificationViaBrowser(CMFNotificationBrowserTestCase):
         browser = Browser(self.portal.absolute_url() + '/login_form')
         browser.loginAsManager()
         document = portal.folder.document1
-        old_title = document.Title()
         document.unmarkCreationFlag()
         browser.editItem(document, title='New title')
         self.failUnlessSent(1)
@@ -156,7 +150,7 @@ class TestNotificationViaBrowser(CMFNotificationBrowserTestCase):
 
         ## Register new member with the browser
         ## FIXME
-        userid = 'a_new_member'
+        #userid = 'a_new_member'
         #self.failUnlessSent(3)
         #mtool = getToolByName(portal, 'portal_membership')
         #mtool.deleteMembers([userid, ])
@@ -171,7 +165,6 @@ class TestNotificationViaBrowser(CMFNotificationBrowserTestCase):
     def testOnDiscussionItemCreation(self):
         """Test notification on discussion item creation."""
         portal = self.portal
-        mh = portal.MailHost
 
         ## Set correct rules so that 1 e-mail should be sent.
         ntool = getToolByName(portal, NTOOL_ID)
@@ -203,8 +196,6 @@ class TestNotificationViaBrowser(CMFNotificationBrowserTestCase):
         ## Enable everything
         self.login('manager')
         users = ['* :: *']
-        member_template = ['* :: string:member_notification']
-        discussion_template = ['* :: string:discussion_notification']
         properties = {
            'item_creation_notification_enabled': True,
            'on_item_creation_users': users,
@@ -246,18 +237,18 @@ class TestNotificationViaBrowser(CMFNotificationBrowserTestCase):
         mh.clearSentList()
 
         ## Test member registration
-        userid = 'a_new_member'
+        #userid = 'a_new_member'
         ## FIXME: register new member
         #self.failUnlessSent(3)
-        mh.clearSentList()
+        #mh.clearSentList()
 
         ## FIXME: Test member modification
 
         ## Test discussion item creation
-        document.allow_discussion = True
+        #document.allow_discussion = True
         ## FIXME: add discussion item
         #self.failUnlessSent(1)
-        mh.clearSentList()
+        #mh.clearSentList()
 
 
 def test_suite():

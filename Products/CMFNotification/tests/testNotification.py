@@ -3,17 +3,14 @@
 $Id$
 """
 
-from zope import event
 import transaction
-from AccessControl import Unauthorized
+from zope import event
 
 from Products.CMFCore.utils import getToolByName
 
 from Products.Archetypes.event import ObjectInitializedEvent
 
-from Products.CMFNotification.exceptions import DisabledFeature
 from Products.CMFNotification.NotificationTool import ID as NTOOL_ID
-from Products.CMFNotification.permissions import SUBSCRIBE_PERMISSION
 
 from Products.CMFNotification.tests.base import FakeMailHost
 from Products.CMFNotification.tests.base import CMFNotificationTestCase
@@ -197,8 +194,6 @@ class TestNotification(CMFNotificationTestCase):
         ntool = getToolByName(portal, NTOOL_ID)
         changeProperty = lambda key, value: \
             ntool.manage_changeProperties(**{key: value})
-        wtool = getToolByName(portal, 'portal_workflow')
-        mh = portal.MailHost
         self.login('manager')
 
         ## Enable some rules just to make sure that none of them
@@ -230,8 +225,6 @@ class TestNotification(CMFNotificationTestCase):
         ntool = getToolByName(portal, NTOOL_ID)
         changeProperty = lambda key, value: \
             ntool.manage_changeProperties(**{key: value})
-        wtool = getToolByName(portal, 'portal_workflow')
-        mh = portal.MailHost
         self.login('manager')
 
         ## Enable some rules just to make sure that none of them
@@ -575,8 +568,6 @@ class TestNotification(CMFNotificationTestCase):
 
         ## Enable everything
         users = ['* :: *']
-        member_template = ['* :: string:member_notification']
-        discussion_template = ['* :: string:discussion_notification']
         properties = {
            'item_creation_notification_enabled': True,
            'on_item_creation_users': users,
@@ -639,8 +630,6 @@ class TestNotification(CMFNotificationTestCase):
         modifyItem = lambda obj: obj.processForm(data=1,
                                                  values={'title': 'New title'})
         wtool = getToolByName(portal, 'portal_workflow')
-        rtool = getToolByName(portal, 'portal_registration')
-        mtool = getToolByName(portal, 'portal_membership')
         mh = portal.MailHost
         document = portal.folder.document1
 
@@ -662,7 +651,7 @@ class TestNotification(CMFNotificationTestCase):
 
         ## A special case, where the first rule match all users, which
         ## disable next rules. I (Damien) am not particularly
-        ## convinced that this is really the behaviour than an user
+        ## convinced that this is really the behaviour than a user
         ## would expect, but I do not have any strong argument against
         ## it, neither. :)
         users = ['* :: * :: one',

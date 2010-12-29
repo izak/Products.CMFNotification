@@ -3,13 +3,11 @@
 $Id$
 """
 
-from AccessControl import Unauthorized
 from zope.component import getUtility
 from zope.component import getMultiAdapter
 
 from Products.CMFCore.utils import getToolByName
 
-from plone.portlets.interfaces import IPortletType
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletRenderer
 
@@ -65,7 +63,6 @@ class TestMisc(CMFNotificationTestCase):
         """Test ``NotificationTool.isSubscriptionToParentAllowed()``.
         """
         portal = self.portal
-        wtool = getToolByName(portal, 'portal_workflow')
         ntool = getToolByName(portal, NTOOL_ID)
 
         def isAllowed(obj):
@@ -101,7 +98,6 @@ class TestMisc(CMFNotificationTestCase):
 
     def testGetPreviousVersion(self):
         """Test ``utils._getPreviousVersion()``."""
-        ntool = getToolByName(self.portal, 'portal_notification')
         document = self.portal.folder.document1
         ## At this point, the versioning mechanism does not yet hold
         ## any reference to 'document'. Even this first version is not
