@@ -481,7 +481,6 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
         ``obj``.
         """
         ec = getExpressionContext(obj)
-        users = []
         for match_expr in self.getProperty('ignore_rules', ()):
             try:
                 if self._match(match_expr, ec):
