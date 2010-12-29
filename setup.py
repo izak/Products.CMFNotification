@@ -1,24 +1,27 @@
-from setuptools import setup, find_packages
 import os
+from setuptools import find_packages
+from setuptools import setup
 
-version = '2.2a1'
+
+version = open(os.path.join(
+        'Products', 'CMFNotification', 'version.txt')).read().strip()
+description = open('README.txt').read().strip()
+long_description = '\n\n'.join((
+        open(os.path.join(
+        'Products', 'CMFNotification', 'README.txt')).read().strip(),
+        open(os.path.join("docs", "HISTORY.txt")).read().strip()))
 
 setup(
     name='Products.CMFNotification',
     version=version,
-    description=\
-        "A Plone product that allows users to be notified when various events "
-        "occur in the portal: item creation or modification, workflow "
-        "actions, etc.",
-    long_description=open("README.txt").read() + "\n" +
-                    open(os.path.join("docs", "HISTORY.txt")).read(),
-    # Get more strings from
-    # http://pypi.python.org/pypi?%3Aaction=list_classifiers
-    classifiers=[
-    "Framework :: Plone",
-    "Programming Language :: Python",
-    ],
-    keywords='CMFNotification',
+    description=description,
+    long_description=long_description,
+    classifiers=(
+        'Framework :: Plone',
+        'Programming Language :: Python',
+        'Development Status :: 5 - Production/Stable',
+        ),
+    keywords='CMFNotification plone notification e-mail',
     author='Pilot Systems',
     author_email='ploneorg@pilotsystems.net',
     url='http://svn.plone.org/svn/collective/Products.CMFNotification',
@@ -27,10 +30,10 @@ setup(
     namespace_packages=['Products'],
     include_package_data=True,
     zip_safe=False,
-    install_requires=[
+    install_requires=(
         'setuptools',
         'Plone >= 4.0',
-    ],
+        ),
     entry_points="""
     [z3c.autoinclude.plugin]
     target = plone
