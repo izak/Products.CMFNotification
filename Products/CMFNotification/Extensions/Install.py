@@ -52,11 +52,6 @@ def uninstall(context):
     if PORTLET_NAME in right:
         del right[PORTLET_NAME]
 
-    ## FIXME: if a subscription portlet has been added somewhere, an
-    ## error will appear when a page is displayed because the portlet
-    ## manager will happpily try to display the portlet, which will
-    ## fail because there is no 'portal_notification' tool anymore.
-
     ## Remove the import and export steps from portal_setup
     ## Since 'remove=True' doesn't seem to work for import/export
     ## steps, here we manually remove import/export steps (Kurt)

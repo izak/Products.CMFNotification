@@ -66,7 +66,11 @@ class Renderer(base.Renderer):
 
     @property
     def available(self):
-        ntool = getToolByName(self.context, NTOOL_ID)
+        ntool = getToolByName(self.context, NTOOL_ID, None)
+        if ntool is None:
+            ## Looks like the product has been removed but the portlet
+            ## is still configured to appear somewhere.
+            return False
         if not ntool.isExtraSubscriptionsEnabled():
             return False
         return ntool.currentUserHasSubscribePermissionOn(self.context)

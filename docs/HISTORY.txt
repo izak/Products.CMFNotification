@@ -4,6 +4,10 @@ Changelog
 2.2 (not yet released)
 ----------------------
 
+- worked around a nasty bug that caused the portal to be broken when
+  CMFNotification was uninstalled and a subscription portlet was still
+  configured somewhere;
+
 - cleaned uninstallation through a GenericSetup profile. [kurt]
 
 - updated tests for Plone 4. [dbaty]
