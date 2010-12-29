@@ -26,6 +26,16 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
+    <!-- Generic Setup uninstall profile -->
+    <setup:registerProfile
+        name="uninstall"
+        title="CMFNotification GS Uninstall"
+        directory="profiles/uninstall"
+        description="Remove CMFNotification"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+
     <!-- Allow for GenericSetup import/export -->
     <five:implements
         class="Products.CMFNotification.NotificationTool.NotificationTool"

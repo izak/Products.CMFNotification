@@ -10,7 +10,7 @@
   </import-step>
 
   <import-step
-     id=""
+     id="import_cmfnotification_portlet"
      version=""
      handler="Products.CMFNotification.exportimport.addPortlet"
      title="Add subscription portlet">

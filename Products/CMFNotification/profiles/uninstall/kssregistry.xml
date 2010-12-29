@@ -1,0 +1,6 @@
+<object name="portal_kss">
+  <kineticstylesheet
+    id="++resource++cmfnotification.kss"
+    remove="True"
+    />
+</object>

@@ -87,6 +87,8 @@ product:
 - Damien Baty (damien DOT baty AT gmail DOT com):
   original author, tests, documentation, maintenance;
 
+- Kurt Bendl: better uninstallatiion;
+
 - Jan-Carel Brand: eggification;
 
 - Alex Garel: "labels" feature;
