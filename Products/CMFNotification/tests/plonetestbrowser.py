@@ -54,7 +54,7 @@ class Browser(BaseBrowser):
         url += '/createObject?type_name=%s' % portal_type
         self.open(url)
         self.submitForm(form_name='edit_form',
-                        submit_button_name='form_submit', **kwargs)
+                        submit_button_name='form.button.save', **kwargs)
 
 
     def editItem(self, item, **kwargs):
@@ -69,7 +69,7 @@ class Browser(BaseBrowser):
         url += '/edit'
         self.open(url)
         self.submitForm(form_name='edit_form',
-                        submit_button_name='form_submit', **kwargs)
+                        submit_button_name='form.button.save', **kwargs)
 
 
     def doWorkflowTransitionOn(self, transition, item):

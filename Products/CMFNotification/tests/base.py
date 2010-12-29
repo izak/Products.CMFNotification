@@ -1,31 +1,33 @@
 """Define a base class and prepare ZopeTestCase and PloneTestCase to
 be used in CMFNotification tests.
 
-Vaguely based on RichDocument tests.
-
 $Id$
 """
 
-## Import the base test case classes
-from Testing import ZopeTestCase
-from Products.PloneTestCase import PloneTestCase
+## Installation voodoo
+from Products.Five import zcml
+from Products.Five import fiveconfigure
+from Products.PloneTestCase import PloneTestCase as ptc
+from Products.PloneTestCase.layer import onsetup
+from Testing import ZopeTestCase as ztc
 
-from Products.Five.testbrowser import Browser
+@onsetup
+def setup_product():
+    """Yeah, you probably have seen this code a few times already..."""
+    fiveconfigure.debug_mode = True
+    import Products.CMFNotification
+    zcml.load_config('configure.zcml', Products.CMFNotification)
+    fiveconfigure.debug_mode = False
+    ztc.installPackage('Five')
+    ztc.installPackage('Products.CMFNotification')
 
-## Make ZopeTestCase aware of CMFNotification
-ZopeTestCase.installProduct('CMFNotification')
-
-## Set up a Plone site
-PRODUCTS = ('CMFNotification', )
-PloneTestCase.setupPloneSite(products=PRODUCTS)
-PloneTestCase.installProduct('Five')
+setup_product()
+ptc.setupPloneSite(products=['Products.CMFNotification'])
 
 
-## Import statements for our own code
+## Import statements for our own code below
 from OFS.SimpleItem import SimpleItem
 from Products.CMFCore.utils import getToolByName
-from Products.CMFNotification import NotificationTool
-
 
 ## Monkey-patch logger so that we can test log messages (and not
 ## display them when tests are run).
@@ -98,11 +100,11 @@ class CMFNotificationBaseTestCase:
 
 
 class CMFNotificationTestCase(CMFNotificationBaseTestCase,
-                              PloneTestCase.PloneTestCase):
+                              ptc.PloneTestCase):
     pass ## Nothing special to do
 
 
 class CMFNotificationBrowserTestCase(CMFNotificationBaseTestCase,
-                                     PloneTestCase.FunctionalTestCase):
+                                     ptc.FunctionalTestCase):
     """A special base class for browser tests."""
     pass ## Nothing special to do.
