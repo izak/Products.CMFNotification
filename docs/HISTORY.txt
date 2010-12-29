@@ -4,19 +4,20 @@ Changelog
 2.2 (not yet released)
 ----------------------
 
-- updated tests for Plone 4 [dbaty]
+- updated tests for Plone 4. [dbaty]
 
-- fixed default notification templates to have them work in Plone 4 [dbaty]
+- fixed default notification templates to have them work in Plone
+  4. They do not work in Plone 3 anymore, though. [dbaty]
 
 
-2.2a1 (2010-04-21)
-------------------
+2.2a1 (21 April 2010)
+---------------------
 
 - Registered the permission in zcml and call setDefaultRoles in __init__.py. [jcbrand] 
 
 
-2.2dev1 (2010-02-25)
---------------------
+2.2dev1 (25 February 2010)
+--------------------------
 
 - The svn repository for the new eggified package has changed:
   http://svn.plone.org/svn/collective/Products.CMFNotification [jcbrand]
@@ -28,11 +29,8 @@ Changelog
   [jcbrand]
 
 
-Older (pre-eggified) releases:
-------------------------------
-
-2.1 Final
----------
+2.1 (4 July 2008)
+-----------------
 
 - added notification on object removal
 
@@ -45,8 +43,8 @@ Older (pre-eggified) releases:
 - rewrote overly complicated ``_getPreviousVersion()`` method.
 
 
-2.0 Final
----------
+2.0 (24 June 2008)
+------------------
 
 - finally provided an implementation for the ``previous`` binding that
   will let integrators display changes in notification template when
@@ -103,8 +101,8 @@ Older (pre-eggified) releases:
 - minor changes in tests and documentation.
 
 
-2.0 Release candidate 1
-------------------------
+2.0 release candidate 1 (unknown release date)
+----------------------------------------------
 
 - CMFNotification now **requires** Plone 3. It is **not** compatible
   with prior versions of Plone anymore;
@@ -114,8 +112,8 @@ Older (pre-eggified) releases:
   though.
 
 
-1.1 Final
----------
+1.1 (14 September 2007)
+-----------------------
 
 - added how-to's, arranged documentation and converted it to reST.
 
@@ -126,8 +124,8 @@ Older (pre-eggified) releases:
 - added translation in German, thanks to Gunter Vasold.
 
 
-1.0 Final
----------
+1.0 (28 August 2007)
+--------------------
 
 - added debug properties to the configuration.
 
@@ -138,3 +136,8 @@ Older (pre-eggified) releases:
 - stripped rule components so that we can now write rules which are
   readable, like ``* :: *`` instead of the ugly ``*::*``.
 
+
+0.9.0 (4 June 2006)
+-------------------
+
+First public release.
