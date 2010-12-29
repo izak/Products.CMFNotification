@@ -166,7 +166,7 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
                     'mode': 'w',
                     'type': 'boolean'},
                    {'id': 'on_item_removal_users',
-                    'label': 'Rules on item creation (users)',
+                    'label': 'Rules on item removal (users)',
                     'mode': 'w',
                     'type': 'lines'},
                    {'id': 'on_item_removal_mail_template',
