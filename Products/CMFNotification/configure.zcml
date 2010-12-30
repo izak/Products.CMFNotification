@@ -22,7 +22,7 @@
         name="default"
         title="CMFNotification"
         directory="profiles/default"
-        description="The default settings for CMFNotification"
+        description="Send e-mail notifications when items are added, edited, etc."
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
