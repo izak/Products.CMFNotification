@@ -36,7 +36,9 @@ of its items (including its subfolders, etc.).
 Dependencies
 ============
 
-This version of CMFNotification runs on Plone 4.
+This version of CMFNotification runs on Plone 3.3 and Plone 4. It
+should also run on Plone 3.0 to 3.3 (automated tests are not ran on
+those versions). However, it does not run on Plone 1.x and 2.x.
 
 Despite the name, this product may not work in a pure CMF
 portal. Minor changes may be needed. I thought about having an

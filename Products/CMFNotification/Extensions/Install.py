@@ -11,9 +11,11 @@ from Products.CMFCore.utils import getToolByName
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignmentMapping
 
+from Products.CMFNotification.config import LAYER_NAME
 from Products.CMFNotification.config import PORTLET_NAME
 from Products.CMFNotification.config import PROJECT_NAME
 from Products.CMFNotification.exportimport import addPermissions
+from Products.CMFNotification.NotificationTool import ID as TOOL_ID
 
 
 def install(context):
@@ -43,14 +45,15 @@ def uninstall(context):
     setup_tool.runAllImportStepsFromProfile('profile-Products.CMFNotification:uninstall')
 
     ## Remove portlet
-    rightColumn = getUtility(IPortletManager,
-                             name=u'plone.rightcolumn',
+    for name in ('plone.rightcolumn', 'plone.leftcolumn'):
+        manager = getUtility(IPortletManager,
+                             name=name,
                              context=portal)
-    right = getMultiAdapter((portal, rightColumn),
-                            IPortletAssignmentMapping,
-                            context=portal)
-    if PORTLET_NAME in right:
-        del right[PORTLET_NAME]
+        column = getMultiAdapter((portal, manager),
+                                 IPortletAssignmentMapping,
+                                 context=portal)
+        if PORTLET_NAME in column:
+            del column[PORTLET_NAME]
 
     ## Remove the import and export steps from portal_setup
     ## Since 'remove=True' doesn't seem to work for import/export
@@ -72,5 +75,11 @@ def uninstall(context):
     panel = getToolByName(portal, 'portal_controlpanel')
     if panel is not None:
         panel.unregisterConfiglet('cmfnotification_configuration')
+
+    ## For some reason, under Plone 3, the tool is not removed by the
+    ## GenericSetup 'uninstall' profile.
+    tool = getToolByName(portal, TOOL_ID, None)
+    if tool is not None:
+        portal.manage_delObjects([TOOL_ID])
 
     return '%s has been successfully uninstalled.' % PROJECT_NAME

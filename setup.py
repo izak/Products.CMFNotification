@@ -32,7 +32,7 @@ setup(
     zip_safe=False,
     install_requires=(
         'setuptools',
-        'Plone >= 4.0',
+        'Plone >= 3.0',
         ),
     entry_points="""
     [z3c.autoinclude.plugin]

@@ -77,7 +77,17 @@ class TestUnInstallation(CMFNotificationTestCase):
         """Uninstall the product before running each test."""
         qtool = getToolByName(self.portal, 'portal_quickinstaller')
         self.setRoles(['Manager'])
-        qtool.uninstallProducts(['CMFNotification'])
+        version = self.portal.Control_Panel.Products.CMFQuickInstallerTool.version
+        version = version.split('.')[0]
+        ## Plone 3.x is shipped with CMFQuickInstallerTool 2.1.7 which
+        ## does not see Products.CMFNotification in the list of
+        ## uninstallable products. Plone 4.x ships with version 3
+        ## where the bug has been fixed (see changeset 110252).
+        if version == '2':
+            from Products.CMFNotification.Extensions.Install import uninstall
+            uninstall(self.portal)
+        else:
+            qtool.uninstallProducts(['CMFNotification'])
 
 
     def testToolIsNotThere(self):
@@ -89,7 +99,7 @@ class TestUnInstallation(CMFNotificationTestCase):
         stool = getToolByName(self.portal, 'portal_skins')
         for skin, layers in stool._getSelections().items():
             layers = layers.split(',')
-            self.failUnless (LAYER_NAME not in layers)
+            self.failUnless(LAYER_NAME not in layers)
         self.failUnless(LAYER_NAME not in stool.objectIds())
 
 
