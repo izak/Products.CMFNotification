@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.2 (not yet released)
-----------------------
+2.2 release candidate 1 (30 december 2010)
+------------------------------------------
 
 - worked around a nasty bug that caused the portal to be broken when
   CMFNotification was uninstalled and a subscription portlet was still
@@ -12,8 +12,8 @@ Changelog
 
 - updated tests for Plone 4. [dbaty]
 
-- fixed default notification templates to have them work in Plone
-  4. They do not work in Plone 3 anymore, though. [dbaty]
+- fixed default notification templates to have them work in Plone 4
+  (and still in Plone 3) [dbaty]
 
 
 2.2a1 (21 April 2010)
