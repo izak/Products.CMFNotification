@@ -37,7 +37,7 @@ Dependencies
 ============
 
 This version of CMFNotification runs on Plone 3.3 and Plone 4. It
-should also run on Plone 3.0 to 3.3 (automated tests are not ran on
+should also run on Plone 3.0 to 3.3 (automated tests are not run on
 those versions). However, it does not run on Plone 1.x and 2.x.
 
 Despite the name, this product may not work in a pure CMF
@@ -107,7 +107,11 @@ Translations:
   Joanneum): translation in German;
 
 - Júlio Monteiro (monteiro AT lab DOT pro DOT br): translation in
-  Brazilian Portuguese.
+  Brazilian Portuguese;
+
+- Leonardo caballero: translation in Spanish;
+
+- Victor Fernandez de Alba: translation in Catalan.
 
 .. _Pilot Systems: http://www.pilotsystems.net
 
