@@ -89,8 +89,7 @@ class Renderer(base.Renderer):
         plone_view = getMultiAdapter((context, self.request),
                                      name='plone')
 
-        if plone_view.isStructuralFolder() or \
-                not plone_view.isDefaultPageInFolder():
+        if not plone_view.isDefaultPageInFolder():
             return False
 
         parent = context.aq_parent

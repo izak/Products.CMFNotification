@@ -217,7 +217,7 @@ class TestSubscription(CMFNotificationTestCase):
 
     def testSubscriptionToUnexpectedObject(self):
         """Test that an user is only allowed to subscribe to the
-        portal object Archetypes-based objects.
+        portal object and Archetypes-based objects.
         """
         ntool = getToolByName(self.portal, NTOOL_ID)
         self.login('manager')
@@ -228,8 +228,74 @@ class TestSubscription(CMFNotificationTestCase):
         self.failUnless(not isAllowed(ntool))
 
 
+class TestSubscriptionToParentAllowed(CMFNotificationTestCase):
+
+    def afterSetUp(self):
+        ntool = getToolByName(self.portal, NTOOL_ID)
+        ntool.manage_changeProperties(extra_subscriptions_enabled=True,
+                                      extra_subscriptions_recursive=True)
+        mtool = getToolByName(self.portal, 'portal_membership')
+        mtool.addMember('manager', 'manager', ['Manager'], [],
+                        properties={'email': 'manager@exemple.com'})
+
+    def _makeOne(self, context):
+        from zope.component import getMultiAdapter
+        from zope.component import getUtility
+        from plone.portlets.interfaces import IPortletManager
+        from plone.portlets.interfaces import IPortletRenderer
+        from Products.CMFNotification.browser import portlet
+        request = context.REQUEST
+        view = context.restrictedTraverse('@@plone')
+        manager = getUtility(IPortletManager,
+                             name='plone.rightcolumn',
+                             context=self.portal)
+        assignment = portlet.Assignment()
+        return getMultiAdapter(
+            (context, request, view, manager, assignment),
+            IPortletRenderer)
+
+    def _callFUT(self, context):
+        renderer = self._makeOne(context)
+        return renderer.isSubscriptionToParentAllowed
+
+    def test_makeOne(self):
+        from Products.CMFNotification.browser.portlet import Renderer
+        renderer = self._makeOne(self.portal)
+        self.assert_(isinstance(renderer, Renderer))
+
+    def test_folder_not_default_page(self):
+        self.login('manager')
+        self.portal.invokeFactory('Folder', 'folder')
+        folder = self.portal.folder
+        allowed = self._callFUT(folder)
+        self.assert_(not allowed)
+
+    def test_folder_default_page(self):
+        self.login('manager')
+        self.portal.invokeFactory('Folder', 'folder')
+        folder = self.portal.folder
+        self.portal.setDefaultPage('folder')
+        allowed = self._callFUT(folder)
+        self.assert_(allowed)
+
+    def test_document_not_a_default_page(self):
+        self.login('manager')
+        self.portal.invokeFactory('Document', 'document')
+        document = self.portal.document
+        allowed = self._callFUT(document)
+        self.assert_(not allowed)
+
+    def test_document_default_page(self):
+        self.login('manager')
+        self.portal.invokeFactory('Document', 'document')
+        document = self.portal.document
+        self.portal.setDefaultPage('document')
+        allowed = self._callFUT(document)
+        self.assert_(allowed)
+
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
     suite.addTest(makeSuite(TestSubscription))
+    suite.addTest(makeSuite(TestSubscriptionToParentAllowed))
     return suite

@@ -1,13 +1,20 @@
 Changelog
 =========
 
-2.2 (not released yet)
-----------------------
+2.2 release candidate 2 (6 January 2011)
+----------------------------------------
+
+- fixed a bug that made impossible to subscribe to the default
+  "Events" and "News" collections and, more generally, to any
+  folderish item that was selected as the default page of its
+  parent. [dbaty] (`issue #32`_)
 
 - added translation in Catalan [sneridagh]
 
+.. _issue #32: http://plone.org/products/cmfnotification/issues/32
 
-2.2 release candidate 1 (30 december 2010)
+
+2.2 release candidate 1 (30 December 2010)
 ------------------------------------------
 
 - worked around a nasty bug that caused the portal to be broken when
