@@ -24,7 +24,7 @@ setup(
     keywords='CMFNotification plone notification e-mail',
     author='Pilot Systems',
     author_email='ploneorg@pilotsystems.net',
-    url='http://svn.plone.org/svn/collective/Products.CMFNotification',
+    url='http://plone.org/products/cmfnotification',
     license='GPL',
     packages=find_packages(exclude=['ez_setup']),
     namespace_packages=['Products'],
