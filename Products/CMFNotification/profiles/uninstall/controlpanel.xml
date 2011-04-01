@@ -6,4 +6,10 @@
              >
     <permission>Manage portal</permission>
   </configlet>
+  <configlet title="CMF Notification Unsubscribe Menu" 
+             action_id="cmf_notification_unsubscribemenu"
+             remove="True"
+             >
+    <permission>Manage portal</permission>
+  </configlet>
 </object>
