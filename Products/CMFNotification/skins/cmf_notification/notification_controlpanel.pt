@@ -1,0 +1,63 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="context/prefs_main_template/macros/master">
+
+<metal:block fill-slot="top-slot"
+             tal:define="dummy python:request.set('disable_border',1)" />
+
+<body>
+  <div metal:fill-slot="prefs_configlet_main"
+       tal:define="unsubscribeview context/@@unsubscribemenu_configlet">
+  
+    <h1>Unsubscribe Users</h1>
+
+    <form method="post"
+          tal:attributes="action string:${portal_url}/@@unsubscribemenu_configlet/unsubscribe">
+      <tal:def define="users unsubscribeview/getUsersList;
+                       userids python:users.keys();
+                       dummy python:userids.sort()">
+          <tal:cond condition="not:userids">
+            <p>No users to unsubscribe.</p>
+          </tal:cond>
+          <tal:rep repeat="userid userids">
+            <br />
+            <p style="font-weight: bold" tal:content="userid" />
+            <table>
+              <tal:def define="paths python:users[userid]">
+                <tal:rep repeat="path paths">
+                  <tr>
+                    <td>
+                      <span tal:content="path" />
+                    </td>
+                    <td>
+                      <input type="checkbox"
+                             tal:attributes="name string:${userid}:list;
+                                             value string:${path}"/>
+                    </td>
+                  </tr>
+                </tal:rep>
+              </tal:def>
+              <tr>
+                <td>Unsubscribe from all</td>
+                <td>
+                  <input type="checkbox"
+                         tal:attributes="name string:${userid}:list;
+                                         value string:all"/>
+                </td>
+              </tr>
+            </table>
+          </tal:rep>
+      </tal:def>
+
+      <input type="hidden" name="form.submitted" value="1" />
+      <br />
+      <input class="submit" type="submit" value="Submit">
+    </form>
+
+  </div>
+
+</body>
+</html>
+
