@@ -1,6 +1,24 @@
 Changelog
 =========
 
+2.2 rc2 branch (1 April 2011)
+-----------------------------
+
+- Made sure the configlet template uses the default styles of a configlet page
+  [lucielejard]
+
+- Updated the uninstall profile to remove the configlet [lucielejard]
+
+- Created a configlet that is available in site setup
+- Display the list of users that are subscribed in alphabetical order and display the list of path for each user
+- For each path, display a check box so that we can choose to unsubscribe from one item at a time
+- For each user, give the possibility to unsubscribe from every path at once
+  [lucielejard]
+
+- Creating a branch to create a confliglet to allow admins to see the list of user 
+  that are subscribed and to be able to unsubscribe whoever they want easily
+  [lucielejard]
+
 2.2 release candidate 2 (6 January 2011)
 ----------------------------------------
 
