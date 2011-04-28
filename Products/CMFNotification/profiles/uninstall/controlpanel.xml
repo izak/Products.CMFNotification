@@ -10,6 +10,5 @@
              action_id="cmf_notification_unsubscribemenu"
              remove="True"
              >
-    <permission>Manage portal</permission>
   </configlet>
 </object>

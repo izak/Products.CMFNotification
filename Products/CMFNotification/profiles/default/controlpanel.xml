@@ -17,7 +17,7 @@
 
   <configlet title="CMF Notification Unsubscribe Menu" 
              action_id="cmf_notification_unsubscribemenu"
-             appId="Products.CMFNotification"
+             appId="CMFNotification"
              category="Products" 
              condition_expr=""
              url_expr="string:${portal_url}/notification_controlpanel"

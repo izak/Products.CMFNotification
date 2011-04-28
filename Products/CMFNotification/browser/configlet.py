@@ -59,6 +59,8 @@ class UnsubscribeMenuConfiglet(BrowserView):
                         self.deleteUserOnPath(subscriptions,
                                               userid,
                                               path)
-        addStatusMessage(self.request, "User(s) unsubscribed successfully", type='info')
+        addStatusMessage(self.request,
+                         "User(s) unsubscribed successfully",
+                         type='info')
         url = "%s/notification_controlpanel" % self.context.absolute_url()
         self.request.RESPONSE.redirect(url)

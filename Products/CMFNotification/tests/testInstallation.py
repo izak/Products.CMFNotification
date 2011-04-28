@@ -26,11 +26,9 @@ class TestInstallation(CMFNotificationTestCase):
     def afterSetUp(self):
         pass
 
-
     def testToolIsThere(self):
         tool = getToolByName(self.portal, TOOL_ID)
         self.failUnless(tool is not None)
-
 
     def testSkinLayerIsThere(self):
         stool = getToolByName(self.portal, 'portal_skins')
@@ -38,7 +36,6 @@ class TestInstallation(CMFNotificationTestCase):
             layers = layers.split(',')
             self.failUnless(LAYER_NAME in layers)
         self.failUnless(LAYER_NAME in stool.objectIds())
-
 
     def testPortletCanBeAdded(self):
         for name in ('plone.leftcolumn', 'plone.rightcolumn'):
@@ -57,17 +54,19 @@ class TestInstallation(CMFNotificationTestCase):
         right_portlets = right_portlets.keys()
         self.failUnless(PORTLET_NAME in right_portlets)
 
-
     def testPermissionHasBeenSet(self):
         roles = set(rolesForPermissionOn(SUBSCRIBE_PERMISSION, self.portal))
         self.failUnlessEqual(roles, set(('Manager', 'Member')))
 
-
-    def testConfigletHasBeenAdded(self):
+    def testConfigurationConfigletHasBeenAdded(self):
         cptool = getToolByName(self.portal, 'portal_controlpanel')
         configlets = [c.getId() for c in cptool.listActions()]
         self.failUnless('cmfnotification_configuration' in configlets)
 
+    def testUnsubscribeConfigletHasBeenAdded(self):
+        cptool = getToolByName(self.portal, 'portal_controlpanel')
+        configlets = [c.getId() for c in cptool.listActions()]
+        self.failUnless('cmf_notification_unsubscribemenu' in configlets)
 
 
 class TestUnInstallation(CMFNotificationTestCase):
@@ -77,7 +76,8 @@ class TestUnInstallation(CMFNotificationTestCase):
         """Uninstall the product before running each test."""
         qtool = getToolByName(self.portal, 'portal_quickinstaller')
         self.setRoles(['Manager'])
-        version = self.portal.Control_Panel.Products.CMFQuickInstallerTool.version
+        version = \
+            self.portal.Control_Panel.Products.CMFQuickInstallerTool.version
         version = version.split('.')[0]
         ## Plone 3.x is shipped with CMFQuickInstallerTool 2.1.7 which
         ## does not see Products.CMFNotification in the list of
@@ -89,11 +89,9 @@ class TestUnInstallation(CMFNotificationTestCase):
         else:
             qtool.uninstallProducts(['CMFNotification'])
 
-
     def testToolIsNotThere(self):
         tool = getToolByName(self.portal, TOOL_ID, None)
         self.failUnless(tool is None)
-
 
     def testSkinLayerIsNotThere(self):
         stool = getToolByName(self.portal, 'portal_skins')
@@ -101,7 +99,6 @@ class TestUnInstallation(CMFNotificationTestCase):
             layers = layers.split(',')
             self.failUnless(LAYER_NAME not in layers)
         self.failUnless(LAYER_NAME not in stool.objectIds())
-
 
     def testPortletDoNoExist(self):
         for name in ('plone.leftcolumn', 'plone.rightcolumn'):
@@ -120,12 +117,15 @@ class TestUnInstallation(CMFNotificationTestCase):
         right_portlets = right_portlets.keys()
         self.failUnless(PORTLET_NAME not in right_portlets)
 
-
-    def testConfigletDoNotExist(self):
+    def testConfigurationConfigletDoNotExist(self):
         cptool = getToolByName(self.portal, 'portal_controlpanel')
         configlets = [c.getId() for c in cptool.listActions()]
         self.failUnless('cmfnotification_configuration' not in configlets)
 
+    def testUnsubscribeConfigletDoNotExist(self):
+        cptool = getToolByName(self.portal, 'portal_controlpanel')
+        configlets = [c.getId() for c in cptool.listActions()]
+        self.failUnless('cmf_notification_unsubscribemenu' not in configlets)
 
 def test_suite():
     from unittest import TestSuite, makeSuite
