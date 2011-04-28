@@ -1,6 +1,15 @@
 Changelog
 =========
 
+2.2 rc3 (XXXX-XX-XX)
+--------------------
+
+- added a confliglet to allow admins to see the list of users
+  that are subscribed and to be able to unsubscribe whoever
+  they want easily 
+  [lucielejard]
+
+
 2.2 release candidate 2 (6 January 2011)
 ----------------------------------------
 

@@ -1,0 +1,96 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      xml:lang="en" lang="en"
+      tal:omit-tag=""
+      metal:define-macro="controlpanel"
+      i18n:domain="plone">
+
+<metal:block use-macro="context/prefs_main_template/macros/master">
+
+<metal:block metal:fill-slot="top_slot"
+             tal:define="dummy python:request.set('disable_border', 1)" />
+
+<body>
+
+<div metal:fill-slot="prefs_configlet_main">
+
+    <div metal:define-macro="form">
+
+        <div id="viewspace" metal:define-slot="viewspace">
+
+            <tal:def define="unsubscribeview context/@@unsubscribemenu_configlet">
+
+              <h1>Unsubscribe Users</h1>
+
+              <a href=""
+                 class="link-parent"
+                 tal:attributes="href string:$portal_url/plone_control_panel"
+                 i18n:translate="label_up_to_plone_setup">
+                  Up to Site Setup
+              </a>
+              
+              <p>Check the checkboxes to unsubscribe a user from an object in the site. Use the checkbox 
+              "Unsubscribe from all" to unsubscribe the user from all his subscriptions in the site.
+              </p>
+              <form method="post"
+                    tal:attributes="action string:${portal_url}/@@unsubscribemenu_configlet/unsubscribe">
+                <tal:def define="users unsubscribeview/getUsersList;
+                                 userids python:users.keys();
+                                 dummy python:userids.sort()">
+                    <tal:cond condition="not:userids">
+                      <p>No users to unsubscribe.</p>
+                    </tal:cond>
+                    <tal:rep repeat="userid userids">
+                      <br />
+                      <p style="font-weight: bold" tal:content="userid" />
+                      <table>
+                        <tr>
+                          <td>Unsubscribe from all</td>
+                          <td>
+                            <input type="checkbox"
+                                   tal:attributes="name string:${userid}:list;
+                                                   value string:all"/>
+                          </td>
+                        </tr>
+                        <tal:def define="paths python:users[userid]">
+                          <tal:rep repeat="path paths">
+                            <tr>
+                              <td>
+                                <span tal:content="path" />
+                              </td>
+                              <td>
+                                <input type="checkbox"
+                                       tal:attributes="name string:${userid}:list;
+                                                       value string:${path}"/>
+                              </td>
+                            </tr>
+                          </tal:rep>
+                        </tal:def>
+                      </table>
+                    </tal:rep>
+                </tal:def>
+          
+                <input type="hidden" name="form.submitted" value="1" />
+                <br />
+                <input class="submit" type="submit" value="Submit">
+              </form>
+
+            </tal:def>
+        </div>
+
+        <script type="text/javascript"
+            tal:define="extra_script view/extra_script | nothing"
+            tal:condition="extra_script"
+            tal:content="structure extra_script">
+        </script>
+
+    </div>
+
+</div>
+</body>
+
+</metal:block>
+</html>
+

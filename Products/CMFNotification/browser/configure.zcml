@@ -66,4 +66,13 @@
      name="cmfnotification.kss"
      file="resources/cmfnotification.kss"/>
 
+  <!-- Configlet Menu -->
+  <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="unsubscribemenu_configlet"
+      class="Products.CMFNotification.browser.configlet.UnsubscribeMenuConfiglet"
+      permission="cmf.ModifyPortalContent"
+      allowed_interface="Products.CMFNotification.browser.interfaces.IUnsubscribeMenuConfiglet"
+      />
+ 
 </configure>

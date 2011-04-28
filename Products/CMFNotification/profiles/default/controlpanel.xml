@@ -3,6 +3,7 @@
         meta_type="Plone Control Panel Tool"
         xmlns:i18n="http://xml.zope.org/namespaces/i18n"
         i18n:domain="cmfnotification">
+
   <configlet title="cmfnotification_configlet_title"
              action_id="cmfnotification_configuration"
              appId="CMFNotification"
@@ -13,4 +14,16 @@
              i18n:attributes="title">
     <permission>Manage portal</permission>
   </configlet>
+
+  <configlet title="CMF Notification Unsubscribe Menu" 
+             action_id="cmf_notification_unsubscribemenu"
+             appId="Products.CMFNotification"
+             category="Products" 
+             condition_expr=""
+             url_expr="string:${portal_url}/notification_controlpanel"
+             visible="True"
+             i18n:attributes="title">
+    <permission>Manage portal</permission>
+  </configlet>
+
 </object>
