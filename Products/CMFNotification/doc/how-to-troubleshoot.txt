@@ -60,6 +60,12 @@ rules. If this list is not empty, then:
 .. _this FAQ: http://plone.org/documentation/faq/plone-logs
 
 
+Use the Unsubscribe menu
+========================
+
+Go to the Unsubscribe menu in site setup to check who is subscribed to
+what object in the site.
+
 Asking for help
 ===============
 

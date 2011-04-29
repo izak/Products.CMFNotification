@@ -32,6 +32,11 @@ subscription may be recursive: if so, an user which has subscribed to
 a folder is notified for any event which occurs on the folder and any
 of its items (including its subfolders, etc.).
 
+CMFNotification also contains a menu to allow admins to unsubscribe
+users from any content in the site. This menu accessible in "site setup"
+and gives a list of the users in alphabetical order, with the path to
+each object they are subscribed to.
+
 
 Dependencies
 ============
