@@ -10,6 +10,10 @@
     <!-- Event configuration -->
     <include file="events/events.zcml"/>
 
+    <utility
+        provides=".interfaces.INotificationDelivery"
+        factory=".mail.MailNotificationDelivery" />
+
     <!-- Skins directory -->
     <cmf:registerDirectory
         name="skins"
