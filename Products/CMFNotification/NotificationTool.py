@@ -32,6 +32,7 @@ from OFS.SimpleItem import SimpleItem
 from ZODB.POSException import ConflictError
 from OFS.PropertyManager import PropertyManager
 from persistent.mapping import PersistentMapping
+from zope.component import getUtility
 
 from AccessControl import Unauthorized
 from AccessControl import ClassSecurityInfo
@@ -51,6 +52,7 @@ from Products.CMFNotification.exceptions import DisabledFeature
 from Products.CMFNotification.exceptions import MailHostNotFound
 from Products.CMFNotification.exceptions import InvalidEmailAddress
 from Products.CMFNotification.permissions import SUBSCRIBE_PERMISSION
+from Products.CMFNotification.interfaces import INotificationDelivery
 
 from Products.ATContentTypes.interface.interfaces import IATContentType
 from Products.CMFPlone.interfaces import IPloneSiteRoot
@@ -63,7 +65,6 @@ META_TYPE = 'CMFNotificationTool'
 EMAIL_REGEXP = re.compile('^[0-9a-zA-Z_&.%+-]+@([0-9a-zA-Z]([0-9a-zA-Z-]*[0-9a-zA-Z])?\.)+[a-zA-Z]{2,6}$')
 RULE_DELIMITER = '::'
 LOG = logging.getLogger('CMFNotification')
-MAIL_HOST_META_TYPES = ('Mail Host', 'Secure Mail Host', 'Maildrop Host', 'Secure Maildrop Host')
 ## Ignore objects temporarily created by the Plone Factory Tool
 DEFAULT_IGNORE_RULES = ["python: getattr(context, 'isTemporary', lambda: False)()"]
 
@@ -420,6 +421,20 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
                                    extra_bindings)
 
 
+    def _how(self, obj, user):
+        """ A helper method that returns the name of the named utility to use
+            for notifying this user. Returns empty string if nothing matches,
+            which will call the default utility. """
+        methods = self._subscriptions[self._getPath(obj)][user]
+
+        # Previous versions marked a subscription with the integer one. Handle
+        # by returning the default
+        if methods == 1:
+            return ('',)
+
+        return methods
+
+
     def _handlerHelper(self, obj, what,
                        get_users_extra_bindings,
                        mail_template_extra_bindings,
@@ -439,34 +454,15 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
         n_sent = 0
         for label, users in users_by_label.items():
             users = self.removeUnAuthorizedSubscribers(users, obj)
-            addresses = self.getEmailAddresses(users)
-
-            if not addresses:
-                LOG.warning("No addresses for label '%s' for '%s' "\
-                            "notification of '%s'",
-                            label, what, obj.absolute_url(1))
-                continue
             mail_template_extra_bindings['label'] = label
-            template = self.getMailTemplate(obj, what,
-                                            mail_template_extra_bindings)
-            if template is None:
-                LOG.warning("No mail template for label '%s' for "\
-                            "'%s' notification of '%s'",
-                            label, what, obj.absolute_url(1))
-                continue
-
-            try:
-                message = template(**mail_template_options)
-            except ConflictError:
-                raise
-            except:
-                LOG.error("Cannot evaluate mail template '%s' on '%s' "\
-                          "for '%s' for label '%s'",
-                          template.absolute_url(1),
-                          obj.absolute_url(1), what, label,
-                          exc_info=True)
-                continue
-            n_sent += self.sendNotification(addresses, message)
+            for user in users:
+                # Fetch the delivery utilities the user requested, then use
+                # that to notify
+                for how in self._how(obj, user):
+                    delivery = getUtility(INotificationDelivery, how)
+                    n_sent += delivery.notify(obj, user, what, label,
+                        get_users_extra_bindings, mail_template_extra_bindings,
+                        mail_template_options)
 
         return n_sent
     #################################################################
@@ -559,8 +555,8 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
         return users_by_label
 
 
-    decPrivate('getMailTemplate')
-    def getMailTemplate(self, obj, what, ec_bindings=None):
+    decPrivate('getTemplate')
+    def getTemplate(self, obj, what, ec_bindings=None):
         """Return the template to notify for the ``what`` of an object
         ``obj``, ``what`` being one of the implemented notification
         ("*item_modification*", "*wf_transition*", etc.), or ``None``
@@ -648,64 +644,6 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
                         filtered_subscribers.append(subscriber)
 
         return filtered_subscribers
-
-
-    decPrivate('getEmailAddresses')
-    def getEmailAddresses(self, users):
-        """Return email addresses of ``users``.
-
-        For each value in ``users``:
-
-        - if the value is not an e-mail, suppose it is an user id and
-        try to get the ``email`` property of this user;
-
-        - remove duplicates;
-
-        - remove bogus e-mail addresses.
-        """
-        mtool = getToolByName(self, 'portal_membership')
-        addresses = {}
-        for user in users:
-            member = mtool.getMemberById(str(user))
-            if member is not None:
-                user = member.getProperty('email', '')
-            if user is None:
-                continue
-            if EMAIL_REGEXP.match(user):
-                addresses[user] = 1
-        return addresses.keys()
-
-
-    decPrivate('sendNotification')
-    def sendNotification(self, addresses, message):
-        """Send ``message`` to all ``addresses``."""
-        mailhosts = self.superValues(MAIL_HOST_META_TYPES)
-        if not mailhosts:
-            raise MailHostNotFound
-        mailhost = mailhosts[0]
-
-        ptool = getToolByName(self, 'portal_properties').site_properties
-        encoding = ptool.getProperty('default_charset', 'utf-8')
-        message = encodeMailHeaders(message, encoding)
-
-        if self.getProperty('debug_mode'):
-            LOG.info('About to send this message to %s: \n%s',
-                     addresses, message)
-
-        n_messages_sent = 0
-        for address in addresses:
-            this_message = ('To: %s\n' % address) + message
-            this_message = this_message.encode(encoding)
-            try:
-                mailhost.send(this_message)
-                n_messages_sent += 1
-            except ConflictError:
-                raise
-            except:
-                LOG.error('Error while sending '\
-                          'notification: \n%s' % this_message,
-                          exc_info=True)
-        return n_messages_sent
 
 
     def _match(self, expr, ec):
@@ -827,7 +765,7 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
 
 
     decPublic('subscribeTo')
-    def subscribeTo(self, obj, email=None):
+    def subscribeTo(self, obj, email=None, how=['']):
         """Subscribe ``email`` (or the current user if ``email`` is
         None) to ``obj``.
         """
@@ -848,7 +786,7 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
             path = self._getPath(obj)
             subscribers = self._subscriptions.get(path, {})
             user = getSecurityManager().getUser().getId()
-            subscribers[user] = 1
+            subscribers[user] = tuple(how)
             self._subscriptions[path] = subscribers
 
 
