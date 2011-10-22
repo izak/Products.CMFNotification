@@ -32,7 +32,7 @@ from OFS.SimpleItem import SimpleItem
 from ZODB.POSException import ConflictError
 from OFS.PropertyManager import PropertyManager
 from persistent.mapping import PersistentMapping
-from zope.component import getUtility
+from zope.component import getUtility, ComponentLookupError
 
 from AccessControl import Unauthorized
 from AccessControl import ClassSecurityInfo
@@ -421,20 +421,6 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
                                    extra_bindings)
 
 
-    def _how(self, obj, user):
-        """ A helper method that returns the name of the named utility to use
-            for notifying this user. Returns empty string if nothing matches,
-            which will call the default utility. """
-        methods = self._subscriptions[self._getPath(obj)][user]
-
-        # Previous versions marked a subscription with the integer one. Handle
-        # by returning the default
-        if methods == 1:
-            return ('',)
-
-        return methods
-
-
     def _handlerHelper(self, obj, what,
                        get_users_extra_bindings,
                        mail_template_extra_bindings,
@@ -448,18 +434,25 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
                                                get_users_extra_bindings)
         if self.isExtraSubscriptionsEnabled():
             users = users_by_label.get('', [])
-            users.extend(self.getExtraSubscribersOf(self._getPath(obj)))
+            users.extend(self.getExtraSubscribersOf(self._getPath(obj)).items())
             users_by_label[''] = users
 
         n_sent = 0
         for label, users in users_by_label.items():
             users = self.removeUnAuthorizedSubscribers(users, obj)
             mail_template_extra_bindings['label'] = label
-            for user in users:
+            for user, how in users:
                 # Fetch the delivery utilities the user requested, then use
                 # that to notify
-                for how in self._how(obj, user):
-                    delivery = getUtility(INotificationDelivery, how)
+                for h in how:
+                    try:
+                        delivery = getUtility(INotificationDelivery, h)
+                    except:
+                        # The method is not known, or the third party
+                        # product that provided it was uninstalled
+                        LOG.warning("Could not look up INotificationDelivery "\
+                            "utility named '%s'", h)
+                        continue
                     n_sent += delivery.notify(obj, user, what, label,
                         get_users_extra_bindings, mail_template_extra_bindings,
                         mail_template_options)
@@ -493,10 +486,10 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
 
     decPrivate('getUsersToNotify')
     def getUsersToNotify(self, obj, what, ec_bindings=None):
-        """Return a mapping of list of users to notify by label for
-        the ``what`` of ``obj``, ``what`` being one of the
-        implemented notification (*item_modification*,
-        *wf_transition*, etc.).
+        """Return a mapping from label to a list of user/how tuples,
+        based on the passed ``what`` and ``ob``. ``what`` is one of the
+        implemented notifications (*item_modification*, *wf_transition*,
+        etc.). ``how`` is a string that says which delivery method to use.
 
         ``ec_bindings`` is a mapping which is injected into the
         expression context of the expression of the rules.
@@ -512,10 +505,13 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
         for rule in rules:
             try:
                 match_expr, users_expr = rule.split(RULE_DELIMITER, 1)
-                if RULE_DELIMITER in users_expr:
-                    users_expr, label = users_expr.split(RULE_DELIMITER)
-                else:
-                    label = ''
+                parts = users_expr.split(RULE_DELIMITER)
+                label = ''
+                how = ('',)
+                if len(parts) > 1:
+                    users_expr, label = parts[:2]
+                if len(parts) > 2:
+                    how = tuple([p.strip() for p in parts[2:]])
             except ValueError:
                 LOG.error("'%s' is not a valid rule "\
                           "('on_%s_users' on '%s')",
@@ -537,11 +533,11 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
                           exc_info=True)
                 continue
             if users_expr == '*':
-                users.extend(self.getAllUsers())
+                users.extend([(u, how) for u in self.getAllUsers()])
                 ignore_next_rules = True
             else:
                 try:
-                    users.extend(Expression(users_expr)(ec))
+                    users.extend([(u, how) for u in Expression(users_expr)(ec)])
                 except ConflictError:
                     raise
                 except:
@@ -630,9 +626,9 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
         portal = getToolByName(self, 'portal_url').getPortalObject()
         mtool = getToolByName(self, 'portal_membership')
         filtered_subscribers = []
-        for subscriber in subscribers:
+        for subscriber, notifymethod in subscribers:
             if self._anonymousShouldBeNotified(obj):
-                filtered_subscribers.append(subscriber)
+                filtered_subscribers.append((subscriber, notifymethod))
             else:
                 ## We use '_huntUser()' and not 'mtool.getMemberById()'
                 ## because the latter would provide a wrapped user
@@ -641,7 +637,7 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
                 member = mtool._huntUser(str(subscriber), portal)
                 if member is not None:
                     if member.has_permission('View', obj):
-                        filtered_subscribers.append(subscriber)
+                        filtered_subscribers.append((subscriber, notifymethod))
 
         return filtered_subscribers
 
@@ -767,7 +763,8 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
     decPublic('subscribeTo')
     def subscribeTo(self, obj, email=None, how=['']):
         """Subscribe ``email`` (or the current user if ``email`` is
-        None) to ``obj``.
+        None) to ``obj``. You can pass the methods by which the user should
+        be notified as a tuple using the ``how`` keyword argument.
         """
         if not self.isExtraSubscriptionsEnabled():
             raise DisabledFeature
@@ -879,8 +876,9 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
         """Return users or email addresses which are subscribed to
         the given path.
 
-        This method returns a mapping whose keys are the users or
-        email addresses. If ``as_if_not_recursive`` is ``True``, this
+        This method returns a mapping of users to tuples of notification
+        methods, that is, each user can subscribe to be notified in more
+        than one way.  If ``as_if_not_recursive`` is ``True``, this
         method acts as if the recursive mode was off.
         """
         subscribers = self._subscriptions.get(path, {}).copy()

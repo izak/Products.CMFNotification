@@ -254,3 +254,28 @@ Special bindings for discussion item creation
 Since ``here`` and ``context`` are ambiguous, two special bindings are
 provided to access the discussed item (``discussed_item``) and the
 discussion item itself (``discussion_item``).
+
+Third-Party notification methods
+--------------------------------
+Third party products can implement their own notification methods and plug them
+into CMFNotification. They do this by creating a class that implements
+INotificationDelivery, and registering that class as a named utility.
+CMFNotification will attempt to look up the utility.
+
+To implement this functionality, an extension was required to allow the user
+to specify which method to use. This was implemented for both subscriptions
+and the rules in portal_notification.
+
+The subscribeTo method on portal_notification supports an optional ``how``
+keyword argument that you can use to pass a tuple of notification methods to
+use for that subscription.
+
+The format of the rules have also been extended to allow specification of a
+method:
+
+    <match-expr> :: <get-notified-expr> :: <label> :: <method>
+
+``label`` is still optional, just leave it blank to use the default.
+If you don't specify a ``method``, it defaults to an empty string. This
+looks up the default notification utility, which will send an email in the
+usual manner.
