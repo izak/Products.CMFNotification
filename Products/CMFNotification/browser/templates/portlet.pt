@@ -63,6 +63,13 @@
             Subscribe to the folder above
           </label>
         </div>
+        <div tal:define="notifiers view/notifiers">
+            <tal:notifiers repeat="notifier notifiers">
+                <input type="checkbox" name="notifiers:list" id="notifiers"
+                       tal:attributes="value notifier/id" />
+                       <tal:d replace="notifier/description" /><br />
+            </tal:notifiers>
+        </div>
         <div>
           <input class="context"
                  type="submit"

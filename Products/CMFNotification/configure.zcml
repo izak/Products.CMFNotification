@@ -11,6 +11,7 @@
     <include file="events/events.zcml"/>
 
     <utility
+        name="mail"
         provides=".interfaces.INotificationDelivery"
         factory=".mail.MailNotificationDelivery" />
 

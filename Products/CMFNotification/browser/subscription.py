@@ -23,7 +23,7 @@ class Subscription(BrowserView):
     It is actually only a wrapper around the main methods of the tool.
     """
 
-    def subscribe(self, subscribe_to_parent=False):
+    def subscribe(self, subscribe_to_parent=False, notifiers=['mail']):
         item = self.context.aq_inner
         if subscribe_to_parent:
             item = item.aq_parent
@@ -34,7 +34,7 @@ class Subscription(BrowserView):
                      u'You have been subscribed to this item.')
 
         ntool = getToolByName(item, TOOL_ID)
-        ntool.subscribeTo(item)
+        ntool.subscribeTo(item, how=notifiers)
 
         utool = getToolByName(item, 'plone_utils')
         utool.addPortalMessage(msg)
@@ -70,7 +70,7 @@ class KSSActions(KSSView):
     portlet.
     """
     @kssaction
-    def subscribe(self, portlet_hash, subscribe_to_parent=False):
+    def subscribe(self, portlet_hash, subscribe_to_parent=False, notifiers=['mail']):
         ## We provide a default value for 'subscribe_to_parent'
         ## because KSS will not pass it to the method is the checkbox
         ## is not checked.
@@ -78,7 +78,7 @@ class KSSActions(KSSView):
         if subscribe_to_parent:
             item = item.aq_parent
         ntool = getToolByName(item, TOOL_ID)
-        ntool.subscribeTo(item)
+        ntool.subscribeTo(item, how=notifiers)
         self._refreshPortlet(portlet_hash)
 
 

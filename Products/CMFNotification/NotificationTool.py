@@ -507,7 +507,7 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
                 match_expr, users_expr = rule.split(RULE_DELIMITER, 1)
                 parts = users_expr.split(RULE_DELIMITER)
                 label = ''
-                how = ('',)
+                how = ('mail',)
                 if len(parts) > 1:
                     users_expr, label = parts[:2]
                 if len(parts) > 2:
@@ -761,7 +761,7 @@ class NotificationTool(UniqueObject, SimpleItem, PropertyManager):
 
 
     decPublic('subscribeTo')
-    def subscribeTo(self, obj, email=None, how=['']):
+    def subscribeTo(self, obj, email=None, how=['mail']):
         """Subscribe ``email`` (or the current user if ``email`` is
         None) to ``obj``. You can pass the methods by which the user should
         be notified as a tuple using the ``how`` keyword argument.

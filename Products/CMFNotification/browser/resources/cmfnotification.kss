@@ -2,7 +2,7 @@ dl.portletSubscription #subscribe:click {
     evt-click-preventdefault: True;
     action-server: kssSubscribe;
     kssSubscribe-portlet_hash: kssAttr(portlethash, True);
-    kssSubscribe-subscribe_to_parent: currentFormVar("subscribe_to_parent");
+    kssSubscribe-kssSubmitForm: currentForm();
 }
 
 dl.portletSubscription #unsubscribe:click {

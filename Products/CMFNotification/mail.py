@@ -2,6 +2,7 @@ import logging
 from ZODB.POSException import ConflictError
 from zope.interface import implements
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone import MessageFactory
 from Products.CMFNotification.utils import encodeMailHeaders
 from Products.CMFNotification.NotificationTool import EMAIL_REGEXP
 from Products.CMFNotification.exceptions import MailHostNotFound
@@ -11,8 +12,15 @@ LOG = logging.getLogger('CMFNotification.mail')
 MAIL_HOST_META_TYPES = ('Mail Host', 'Secure Mail Host', 'Maildrop Host',
     'Secure Maildrop Host')
 
+_ = MessageFactory('cmfnotification')
+
 class MailNotificationDelivery(object):
     implements(INotificationDelivery)
+
+    @property
+    def description(self):
+        return _(u'mail_notification_delivery_description',
+                   default=u'Notify by email')
 
     def notify(self, obj, user, what, label,
                        get_users_extra_bindings,

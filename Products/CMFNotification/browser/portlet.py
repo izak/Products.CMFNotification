@@ -24,6 +24,7 @@ $Id$
 
 from zope.interface import implements
 from zope.component import getMultiAdapter
+from zope.component import getUtilitiesFor
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from Products.CMFCore.utils import getToolByName
@@ -33,6 +34,7 @@ from plone.app.portlets.portlets import base
 from plone.portlets.interfaces import IPortletDataProvider
 
 from Products.CMFNotification.NotificationTool import ID as NTOOL_ID
+from Products.CMFNotification.interfaces import INotificationDelivery
 
 
 mf = MessageFactory('cmfnotification')
@@ -75,6 +77,12 @@ class Renderer(base.Renderer):
             return False
         return ntool.currentUserHasSubscribePermissionOn(self.context)
 
+
+    @property
+    def notifiers(self):
+        li = [dict(id=i, description=d.description) for \
+            i, d in getUtilitiesFor(INotificationDelivery)]
+        return li
 
     @property
     def isSubscriptionToParentAllowed(self):
