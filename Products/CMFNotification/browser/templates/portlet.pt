@@ -63,11 +63,15 @@
             Subscribe to the folder above
           </label>
         </div>
-        <div tal:define="notifiers view/notifiers">
+        <div tal:define="notifiers view/notifiers;
+                         hidden python:len(notifiers)==1">
             <tal:notifiers repeat="notifier notifiers">
                 <input type="checkbox" name="notifiers:list" id="notifiers"
-                       tal:attributes="value notifier/id" />
-                       <tal:d replace="notifier/description" /><br />
+                       tal:attributes="value notifier/id;
+                                       type python:hidden and 'hidden' or 'checkbox'" />
+                       <tal:many condition="not:hidden">
+                           <tal:d replace="notifier/description" /><br />
+                       </tal:many>
             </tal:notifiers>
         </div>
         <div>
